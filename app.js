@@ -160,18 +160,37 @@ function createPopupContent(alarm) {
     const safeName = escapeHtml(alarm.name || 'Unnamed Alarm');
     const safeNameForJs = safeName.replace(/'/g, "\\'");
     
+    // Safely format coordinates with null checks
+    const lat = alarm.latitude != null ? alarm.latitude.toFixed(6) : 'N/A';
+    const lng = alarm.longitude != null ? alarm.longitude.toFixed(6) : 'N/A';
+    
+    // Validate image URL (only allow http/https)
+    const safeImageUrl = alarm.image && isValidImageUrl(alarm.image) ? escapeHtml(alarm.image) : '';
+    
     return `
         <div class="popup-content">
             <h3>${safeName}</h3>
             <p><strong>Status:</strong> <span class="popup-status ${statusClass}">${statusClass}</span></p>
-            <p><strong>Location:</strong> ${alarm.latitude.toFixed(6)}, ${alarm.longitude.toFixed(6)}</p>
+            <p><strong>Location:</strong> ${lat}, ${lng}</p>
             ${text ? `<p><strong>Description:</strong> ${escapeHtml(text)}</p>` : ''}
-            ${alarm.image ? `<p><img src="${escapeHtml(alarm.image)}" alt="Alarm image" style="max-width: 100%; margin-top: 0.5rem; border-radius: 4px;"></p>` : ''}
+            ${safeImageUrl ? `<p><img src="${safeImageUrl}" alt="Alarm image" style="max-width: 100%; margin-top: 0.5rem; border-radius: 4px;"></p>` : ''}
             <div class="popup-actions">
                 <button class="btn btn-danger" onclick="openDeleteModal(${alarm.thingid}, '${safeNameForJs}')">Delete</button>
             </div>
         </div>
     `;
+}
+
+// Validate image URL to prevent XSS
+function isValidImageUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+    try {
+        const parsedUrl = new URL(url);
+        // Only allow http and https protocols
+        return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+    } catch (e) {
+        return false;
+    }
 }
 
 // Open Add Alarm modal
