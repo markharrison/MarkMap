@@ -158,7 +158,7 @@ function createPopupContent(alarm) {
     const statusClass = alarm.status || 'unknown';
     const text = alarm.text || 'No description available';
     const safeName = escapeHtml(alarm.name || 'Unnamed Alarm');
-    const safeNameForJs = safeName.replace(/'/g, "\\'");
+    const safeNameForJs = safeName.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     
     // Safely format coordinates with null checks
     const lat = alarm.latitude != null ? alarm.latitude.toFixed(6) : 'N/A';
