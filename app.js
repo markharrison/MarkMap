@@ -157,16 +157,18 @@ function createIcon(status) {
 function createPopupContent(alarm) {
     const statusClass = alarm.status || 'unknown';
     const text = alarm.text || 'No description available';
+    const safeName = escapeHtml(alarm.name || 'Unnamed Alarm');
+    const safeNameForJs = safeName.replace(/'/g, "\\'");
     
     return `
         <div class="popup-content">
-            <h3>${escapeHtml(alarm.name || 'Unnamed Alarm')}</h3>
+            <h3>${safeName}</h3>
             <p><strong>Status:</strong> <span class="popup-status ${statusClass}">${statusClass}</span></p>
             <p><strong>Location:</strong> ${alarm.latitude.toFixed(6)}, ${alarm.longitude.toFixed(6)}</p>
             ${text ? `<p><strong>Description:</strong> ${escapeHtml(text)}</p>` : ''}
             ${alarm.image ? `<p><img src="${escapeHtml(alarm.image)}" alt="Alarm image" style="max-width: 100%; margin-top: 0.5rem; border-radius: 4px;"></p>` : ''}
             <div class="popup-actions">
-                <button class="btn btn-danger" onclick="openDeleteModal(${alarm.thingid}, '${escapeHtml(alarm.name)}')">Delete</button>
+                <button class="btn btn-danger" onclick="openDeleteModal(${alarm.thingid}, '${safeNameForJs}')">Delete</button>
             </div>
         </div>
     `;
