@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'https://thingsapi.azure1.dev/api/Things';
+const API_BASE_URL = 'https://things--api.azurewebsites.net/api/Things';
 const POLL_INTERVAL = 60000; // 60 seconds
 const UK_CENTER = [54.5, -3.5]; // Approximate center of UK
 const UK_ZOOM = 6;
